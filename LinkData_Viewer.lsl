@@ -2,7 +2,6 @@ string filter_option = ".";
 string select;
 string pass;
 
-integer protected = FALSE;
 integer ichannel = 472;
 integer cur_page = 1;
 integer chanhandlr;
