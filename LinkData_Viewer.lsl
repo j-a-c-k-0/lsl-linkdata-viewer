@@ -54,7 +54,7 @@ list make_list(integer a,integer b)
   {
   string z = llDeleteSubString(unknown(llList2String(items,i))+"-"+unknown(llLinksetDataRead(llList2String(items,i))),40,1000);
   inventory += z;
-  }items = []; return inventory;
+  }return inventory;
 }
 dialog1()
 {
@@ -113,7 +113,7 @@ default
         {
         list a = llLinksetDataFindKeys(filter_option,page0,page1);
         select = llList2String(a,(integer)llList2String(items,2));
-        dialog1(); a = []; return;
+        dialog1();return;
         }
         if(option == 4){llLinksetDataWriteProtected(select,text,pass);dialog1();}
         if(option == 6)
