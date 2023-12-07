@@ -102,6 +102,7 @@ default
         if(text == "[ main ]"){dialog2();return;}
         if(text == "[ Dele ]"){dialog3();return;}
         if(text == "[  ←  ]"){dialog0();return;}
+        if(text == "[  🞪  ]"){return;}
         if(text == "..."){dialog2();return;}
         if(text == ">>>"){dialog_songmenu(cur_page+1);return;}
         if(text == "<<<"){dialog_songmenu(cur_page-1);return;}
