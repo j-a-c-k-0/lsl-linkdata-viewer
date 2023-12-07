@@ -35,7 +35,7 @@ if(songsonpage == 0)
 songsonpage = 9; integer fspnum = (page*9)-9; list dbuf; integer i;
 for(; i < songsonpage; ++i)
 {
-dbuf += ["Data #" + (string)(fspnum+i)];
+dbuf += [(string)(fspnum+i)+".ⓘ."+(string)(i)];
 }
 list snlist = numerizelist(make_list(fspnum,i), fspnum, ". ");
 llDialog(llGetOwner(),
@@ -48,7 +48,7 @@ string unk(string k,string a){if("" == llLinksetDataReadProtected(select,pass)){
 string unknown(string k){if("" == k){return "????";}return k;}
 list make_list(integer a,integer b)
 {
-  integer i; list inventory; page0 = a; page1 = a+b;
+  integer i; list inventory; page0 = a; page1 = (a+b);
   list items = llLinksetDataFindKeys(filter_option,a,(a+b));
   for(i = 0; i < b; ++i)
   {
@@ -108,11 +108,12 @@ default
         if(text == "..."){dialog2();return;}
         if(text == ">>>"){dialog_songmenu(cur_page+1);return;}
         if(text == "<<<"){dialog_songmenu(cur_page-1);return;}
-        if(llToLower(llGetSubString(text,0,5)) == "data #")
+        list items = llParseString2List(text, ["."], []);
+        if(llList2String(items,1) =="ⓘ")
         {
-        integer pnum = (integer)llGetSubString(text,6,-1);
         list a = llLinksetDataFindKeys(filter_option,page0,page1);
-        select = llList2String(a,pnum); dialog1(); return;
+        select = llList2String(a,(integer)llList2String(items,2));
+        dialog1(); return;
         }
         if(option == 4){llLinksetDataWriteProtected(select,text,pass);dialog1();}
         if(option == 6)
