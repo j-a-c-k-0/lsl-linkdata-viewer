@@ -89,8 +89,10 @@ default
     {  
     if(skey == llGetOwner()) 
     {
+        if(text == "[ say ]"){llOwnerSay(select+"-"+llLinksetDataReadProtected(select,pass));dialog1();return;}
         if(text == "[ protected ]"){option = 6;dialog4("write","sample : name=data=pass");return;}  
         if(text == "[ unprotect ]"){option = 3;dialog4("write","sample : name=data");return;}  
+        if(text == "[ delete ]"){llLinksetDataDeleteProtected(select,pass);dialog0();return;}
         if(text == "[ filter ]"){option = 1;dialog4("filter","default ' . '");return;}
         if(text == "[ delete_f ]"){option = 2;dialog4("data delete found","");return;}
         if(text == "[ rewrite ]"){option = 4;dialog4("rewrite data","");return;}  
@@ -103,8 +105,6 @@ default
         if(text == "[  ←  ]"){dialog0();return;}
         if(text == "[  🞪  ]"){return;}
         if(text == "..."){dialog2();return;}
-        if(text == "[ say ]"){llOwnerSay(select+"-"+llLinksetDataReadProtected(select,pass));dialog1();return;}
-        if(text == "[ delete ]"){llLinksetDataDeleteProtected(select,pass);dialog0();return;}
         if(text == ">>>"){dialog_songmenu(cur_page+1);return;}
         if(text == "<<<"){dialog_songmenu(cur_page-1);return;}
         if(llToLower(llGetSubString(text,0,5)) == "data #")
