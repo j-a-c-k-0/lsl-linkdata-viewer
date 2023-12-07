@@ -90,6 +90,7 @@ default
     {  
     if(skey == llGetOwner()) 
     {
+        if (llGetFreeMemory() < 10000){llResetScript();}
         if(text == "[ say ]"){llOwnerSay(select+"-"+llLinksetDataReadProtected(select,pass));dialog1();return;}
         if(text == "[ protected ]"){option = 6;dialog4("write","sample : name=data=pass");return;}  
         if(text == "[ unprotect ]"){option = 3;dialog4("write","sample : name=data");return;}  
@@ -104,7 +105,7 @@ default
         if(text == "[ main ]"){dialog2();return;}
         if(text == "[ Dele ]"){dialog3();return;}
         if(text == "[  ←  ]"){dialog0();return;}
-        if(text == "[  🞪  ]"){return;}
+        if(text == "[  🞪  ]"){llResetScript();}
         if(text == "..."){dialog2();return;}
         if(text == ">>>"){dialog_songmenu(cur_page+1);return;}
         if(text == "<<<"){dialog_songmenu(cur_page-1);return;}
