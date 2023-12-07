@@ -6,6 +6,8 @@ integer ichannel = 472;
 integer cur_page = 1;
 integer chanhandlr;
 integer option = 0;
+integer page0;
+integer page1;
 
 random(){ichannel = llFloor(llFrand(1000000) - 100000); llListenRemove(chanhandlr); chanhandlr = llListen(ichannel, "", NULL_KEY, "");}
 list order_buttons(list buttons)
@@ -22,8 +24,7 @@ newlist += [(string)(start + i) + apnd + llList2String(tlist, i)];
 }return newlist;}
 dialog_songmenu(integer page)
 {
-list items = llLinksetDataFindKeys(filter_option,0,llLinksetDataCountKeys());
-integer slist_size = llGetListLength(items);
+integer slist_size = llLinksetDataCountKeys();
 integer pag_amt = llCeil((float)slist_size / 9.0);
 if(page > pag_amt) page = 1;
 else if(page < 1) page = pag_amt;
@@ -40,19 +41,19 @@ list snlist = numerizelist(make_list(fspnum,i), fspnum, ". ");
 llDialog(llGetOwner(),
 "data list"+"\n"+
 "filter ' "+filter_option+" '\n\n"+
-llDumpList2String(snlist, "\n"),order_buttons(dbuf + ["<<<", "[ main ]", ">>>"]),ichannel);
+llDumpList2String(snlist,"\n"),order_buttons(dbuf + ["<<<", "[ main ]", ">>>"]),ichannel);
 }
 string unkn(string k){if("" == k){if(llLinksetDataReadProtected(select,pass) == ""){return "????";}else{return llLinksetDataReadProtected(select,pass);}}pass = ""; return k;}
 string unk(string k,string a){if("" == llLinksetDataReadProtected(select,pass)){return "[ pass ]";}return a;}
 string unknown(string k){if("" == k){return "????";}return k;}
 list make_list(integer a,integer b)
 {
-  list inventory; integer i;
+  integer i; list inventory; page0 = a; page1 = a+b;
+  list items = llLinksetDataFindKeys(filter_option,a,(a+b));
   for(i = 0; i < b; ++i)
   {
-  list items = llLinksetDataFindKeys(filter_option,0,llLinksetDataCountKeys());
-  string a = llDeleteSubString(llList2String(items,a+i)+"-"+unknown(llLinksetDataRead(llList2String(items,a+i))),40,1000);
-  inventory += a;
+  string z = llDeleteSubString(unknown(llList2String(items,i))+"-"+unknown(llLinksetDataRead(llList2String(items,i))),40,1000);
+  inventory += z;
   }return inventory;
 }
 dialog1()
@@ -68,7 +69,7 @@ random();
 llDialog(llGetOwner(),
 "main menu\n\n"+
 "memory = "+(string)llLinksetDataAvailable()+"\n"+
-"list count = "+(string)llGetListLength(llLinksetDataFindKeys(filter_option,0,llLinksetDataCountKeys()))+"\n"+
+"list count = "+(string)llLinksetDataCountKeys()+"\n"+
 "filter = ' "+filter_option+" '\n",["[ filter ]","[ list ]","[ write ]","[  🞪  ]","...","[ Dele ]"],ichannel);
 }
 dialog0(){random();dialog_songmenu(cur_page);}
@@ -98,8 +99,8 @@ default
         if(text == "[ rewrite ]"){option = 4;dialog4("rewrite data","");return;}  
         if(text == "[ delete_all ]"){llLinksetDataReset();dialog2();return;}
         if(text == "[ pass ]"){option = 5;dialog4("enter pass","");return;}   
+        if(text == "[ list ]"){cur_page = 1; dialog0();return;}
         if(text == "[ write ]"){dialog5();return;}
-        if(text == "[ list ]"){dialog0();return;}
         if(text == "[ main ]"){dialog2();return;}
         if(text == "[ Dele ]"){dialog3();return;}
         if(text == "[  ←  ]"){dialog0();return;}
@@ -110,7 +111,7 @@ default
         if(llToLower(llGetSubString(text,0,5)) == "data #")
         {
         integer pnum = (integer)llGetSubString(text,6,-1);
-        list a = llLinksetDataFindKeys(filter_option,0,llLinksetDataCountKeys());
+        list a = llLinksetDataFindKeys(filter_option,page0,page1);
         select = llList2String(a,pnum); dialog1(); return;
         }
         if(option == 4){llLinksetDataWriteProtected(select,text,pass);dialog1();}
