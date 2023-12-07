@@ -34,7 +34,7 @@ if(songsonpage == 0)
 songsonpage = 9; integer fspnum = (page*9)-9; list dbuf; integer i;
 for(; i < songsonpage; ++i)
 {
-dbuf += ["Play #" + (string)(fspnum+i)];
+dbuf += ["Data #" + (string)(fspnum+i)];
 }
 list snlist = numerizelist(make_list(fspnum,i), fspnum, ". ");
 llDialog(llGetOwner(),
@@ -103,34 +103,17 @@ default
         if(text == "[  ←  ]"){dialog0();return;}
         if(text == "[  🞪  ]"){return;}
         if(text == "..."){dialog2();return;}
+        if(text == "[ say ]"){llOwnerSay(select+"-"+llLinksetDataReadProtected(select,pass));dialog1();return;}
+        if(text == "[ delete ]"){llLinksetDataDeleteProtected(select,pass);dialog0();return;}
         if(text == ">>>"){dialog_songmenu(cur_page+1);return;}
         if(text == "<<<"){dialog_songmenu(cur_page-1);return;}
-        if(llToLower(llGetSubString(text,0,5)) == "play #")
+        if(llToLower(llGetSubString(text,0,5)) == "data #")
         {
         integer pnum = (integer)llGetSubString(text,6,-1);
         list a = llLinksetDataFindKeys(filter_option,0,llLinksetDataCountKeys());
         select = llList2String(a,pnum); dialog1(); return;
         }
-        if(text == "[ say ]")
-        {  
-        if(llLinksetDataReadProtected(select,pass) == ""){ }else{llOwnerSay(select+"-"+llLinksetDataReadProtected(select,pass));}
-        if(llLinksetDataRead(select) == ""){ }else{llOwnerSay(select+"-"+llLinksetDataRead(select));}
-        dialog1();
-        return;
-        }
-        if(text == "[ delete ]")
-        {
-        if(llLinksetDataReadProtected(select,pass) == ""){ }else{llLinksetDataDeleteProtected(select,pass);} 
-        if(llLinksetDataRead(select) == ""){ }else{llLinksetDataDelete(select);}
-        dialog0();
-        return;
-        }
-        if(option == 4)
-        {
-        if(llLinksetDataReadProtected(select,pass) == ""){ }else{llLinksetDataWriteProtected(select,text,pass);}  
-        if(llLinksetDataRead(select) == ""){ }else{llLinksetDataWrite(select,text);}
-        dialog1();
-        }
+        if(option == 4){llLinksetDataWriteProtected(select,text,pass);dialog1();}
         if(option == 6)
         {
         list a = llParseString2List(text,["="], []);
