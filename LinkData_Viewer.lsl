@@ -45,7 +45,7 @@ string make_list(integer a,integer b)
   list items = llLinksetDataFindKeys(filter_option,a,(a+b));
   for(i = 0; i < b; ++i)
   {
-  string z = llDeleteSubString(llList2String(items,i),10,1000)+"⟺"+llDeleteSubString(unknown(llLinksetDataRead(llList2String(items,i))),29,1000);
+  string z = llDeleteSubString(unknown(llLinksetDataRead(llList2String(items,i))),10,1000)+"⟺"+llDeleteSubString(unknown(llLinksetDataRead(llList2String(items,i))),29,1000);
   inventory += (string)(i)+". "+z+"\n";
   }return inventory;
 }
