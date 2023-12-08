@@ -33,34 +33,27 @@ if(page == pag_amt)
 songsonpage = slist_size % 9;
 if(songsonpage == 0)
 songsonpage = 9; integer fspnum = (page*9)-9; list dbuf; integer i;
-for(; i < songsonpage; ++i)
-{
-dbuf += [(string)(fspnum+i)+".ⓘ."+(string)(i)];
+for(; i < songsonpage; ++i){dbuf += [(string)(i)+"'゜"];}
+llDialog(llGetOwner(),"page - "+(string)page+"\n\n"+make_list(fspnum,i),order_buttons(dbuf + ["<<<", "[ main ]", ">>>"]),ichannel);
 }
-list snlist = numerizelist(make_list(fspnum,i), fspnum, ". ");
-llDialog(llGetOwner(),
-"data list"+"\n"+
-"filter ' "+filter_option+" '\n\n"+
-llDumpList2String(snlist,"\n"),order_buttons(dbuf + ["<<<", "[ main ]", ">>>"]),ichannel);
-}
-string unkn(string k){if("" == k){if(llLinksetDataReadProtected(select,pass) == ""){return "????";}else{return llLinksetDataReadProtected(select,pass);}}pass = ""; return k;}
+string unkn(string k){if("" == k){if(llLinksetDataReadProtected(select,pass) == ""){return "����";}else{return llLinksetDataReadProtected(select,pass);}}pass = ""; return k;}
 string unk(string k,string a){if("" == llLinksetDataReadProtected(select,pass)){return "[ pass ]";}return a;}
-string unknown(string k){if("" == k){return "????";}return k;}
-list make_list(integer a,integer b)
+string unknown(string k){if("" == k){return "����";}return k;}
+string make_list(integer a,integer b)
 {
-  integer i; list inventory; page0 = a; page1 = (a+b);
+  integer i; string inventory; page0 = a; page1 = (a+b);
   list items = llLinksetDataFindKeys(filter_option,a,(a+b));
   for(i = 0; i < b; ++i)
   {
-  string z = llDeleteSubString(unknown(llList2String(items,i))+"-"+unknown(llLinksetDataRead(llList2String(items,i))),40,1000);
-  inventory += z;
+  string z = llDeleteSubString(llList2String(items,i),10,1000)+"⟺"+llDeleteSubString(unknown(llLinksetDataRead(llList2String(items,i))),29,1000);
+  inventory += (string)(i)+". "+z+"\n";
   }return inventory;
 }
 dialog1()
 {
 random();
 string a = llLinksetDataRead(select);
-llDialog(llGetOwner(),"data - "+llDeleteSubString(select+"="+unkn(llLinksetDataRead(select)),40,1000)
+llDialog(llGetOwner(),llDeleteSubString(select,10,1000)+"⟺"+llDeleteSubString(unkn(llLinksetDataRead(select)),29,1000)
 ,[unk(a,"[ delete ]"),unk(a,"[ rewrite ]"),unk(a,"[ say ]"),"[  🞪  ]","[ main ]","[  ←  ]"],ichannel);
 }
 dialog2()
@@ -91,7 +84,7 @@ default
     if(skey == llGetOwner()) 
     {
         if (llGetFreeMemory() < 10000){llResetScript();}
-        if(text == "[ say ]"){llOwnerSay(select+"-"+llLinksetDataReadProtected(select,pass));dialog1();return;}
+        if(text == "[ say ]"){llOwnerSay("[ key : "+select+" ][ value : "+llLinksetDataReadProtected(select,pass)+" ]");dialog1();return;}
         if(text == "[ protected ]"){option = 6;dialog4("write","sample : name=data=pass");return;}  
         if(text == "[ unprotect ]"){option = 3;dialog4("write","sample : name=data");return;}  
         if(text == "[ delete ]"){llLinksetDataDeleteProtected(select,pass);dialog0();return;}
@@ -109,14 +102,13 @@ default
         if(text == "..."){dialog2();return;}
         if(text == ">>>"){dialog_songmenu(cur_page+1);return;}
         if(text == "<<<"){dialog_songmenu(cur_page-1);return;}
-        list items = llParseString2List(text, ["."], []);
-        if(llList2String(items,1) =="ⓘ")
+        list items = llParseString2List(text, ["'"], []);
+        if(llList2String(items,1) == "゜")
         {
         list a = llLinksetDataFindKeys(filter_option,page0,page1);
-        select = llList2String(a,(integer)llList2String(items,2));
+        select = llList2String(a,(integer)llList2String(items,0));
         dialog1();return;
         }
-        if(option == 4){llLinksetDataWriteProtected(select,text,pass);dialog1();}
         if(option == 6)
         {
         list a = llParseString2List(text,["="], []);
@@ -127,6 +119,7 @@ default
         list a = llParseString2List(text,["="], []);
         llLinksetDataWrite(llList2String(a,0),llList2String(a,1)); dialog2();
         }
+        if(option == 4){llLinksetDataWriteProtected(select,text,pass);dialog1();}
         if(option == 2){llLinksetDataDeleteFound(text,"");dialog2();}
         if(option == 1){filter_option = text;dialog2();} 
         if(option == 5){pass = text;dialog1();}
