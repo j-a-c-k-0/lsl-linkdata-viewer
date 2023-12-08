@@ -15,13 +15,6 @@ list order_buttons(list buttons)
 return llList2List(buttons, -3, -1) + llList2List(buttons, -6, -4) +
 llList2List(buttons, -9, -7) + llList2List(buttons, -12, -10);
 }
-list numerizelist(list tlist, integer start, string apnd)
-{
-list newlist; integer lsize = llGetListLength(tlist); integer i;
-for(; i < lsize; i++)
-{
-newlist += [(string)(start + i) + apnd + llList2String(tlist, i)];
-}return newlist;}
 dialog_songmenu(integer page)
 {
 integer slist_size = llLinksetDataCountKeys();
